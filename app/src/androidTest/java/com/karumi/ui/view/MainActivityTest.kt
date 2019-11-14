@@ -23,16 +23,43 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
         compareScreenshot(activity)
     }
 
+    @Test
+    fun showsSuperHeroesIfThereAre() {
+        givenThereAreSomeSuperHeroes(10)
+
+        val activity = startActivity()
+
+        compareScreenshot(activity)
+    }
+
+    @Test
+    fun showOnlyOneSuperHeroe() {
+        givenThereAreSomeSuperHeroes(1)
+
+        val activity = startActivity()
+
+        compareScreenshot(activity)
+    }
+
+    @Test
+    fun showsAvengersIfThereAre() {
+        givenThereAreSomeAvengers(10)
+
+        val activity = startActivity()
+
+        compareScreenshot(activity)
+    }
+
     private fun givenThereAreSomeSuperHeroes(
-        numberOfSuperHeroes: Int = 1,
-        avengers: Boolean = false
+            numberOfSuperHeroes: Int = 1,
+            avengers: Boolean = false
     ): List<SuperHero> {
         val superHeroes = IntRange(0, numberOfSuperHeroes - 1).map { id ->
             val superHeroName = "SuperHero - $id"
             val superHeroDescription = "Description Super Hero - $id"
             SuperHero(
-                superHeroName, null, avengers,
-                superHeroDescription
+                    superHeroName, null, avengers,
+                    superHeroDescription
             )
         }
 
@@ -43,6 +70,9 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
     private fun givenThereAreNoSuperHeroes() {
         whenever(repository.getAllSuperHeroes()).thenReturn(emptyList())
     }
+
+    private fun givenThereAreSomeAvengers(numberOfAvengers: Int): List<SuperHero> =
+            givenThereAreSomeSuperHeroes(numberOfAvengers, avengers = true)
 
     override val testDependencies = Module(allowSilentOverride = true) {
         bind<SuperHeroRepository>() with instance(repository)
